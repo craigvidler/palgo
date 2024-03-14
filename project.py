@@ -1,9 +1,4 @@
-import pygame
-
-SCREENRECT = pygame.Rect(0, 0, 1200, 596)
-BKGCOLOR = 'gray35'
-TEXTSIZE = 14
-FPS = 10
+from config import *
 
 
 def events():
@@ -31,9 +26,4 @@ def main():
 
 
 if __name__ == '__main__':
-    pygame.init()
-    pygame.display.set_caption('Palgo')
-    screen = pygame.display.set_mode(SCREENRECT.size)
-    clock = pygame.time.Clock()
-    font = pygame.font.SysFont('Menlo', TEXTSIZE)
     main()
