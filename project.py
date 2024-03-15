@@ -9,10 +9,6 @@ def events():
             raise SystemExit
 
 
-def update():
-    pass
-
-
 def draw():
     screen.fill(BKGCOLOR)
     draw_grid()
@@ -48,9 +44,9 @@ def dijkstra(graph, start, end):
 
     while pq:
         cost, current = heappop(pq)
-        print(current)
+        yield current
         if current == end:
-            return cost, path(end, previous)
+            yield cost, path(end, previous)
         for r, c in neighbors(*current, *end):
             if (r, c) not in previous:
                 previous[(r, c)] = current
@@ -69,10 +65,13 @@ def neighbors(r, c, maxrow, maxcol):
 
 
 def main():
-    print(dijkstra(GRID, START, END))
+    d = dijkstra(GRID, START, END)
     while True:
         events()
-        update()
+        try:
+            print(next(d))
+        except StopIteration:
+            pass
         draw()
         clock.tick(FPS)
 
