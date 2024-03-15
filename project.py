@@ -1,3 +1,4 @@
+from heapq import heappop, heappush
 from config import *
 
 
@@ -41,7 +42,34 @@ def draw_node(surface, r, c, cost):
     surface.blit(text, (x + XPADDING, y + YPADDING))
 
 
+def dijkstra(graph, start, end):
+    pq = [(0, start)]
+    previous = {}
+
+    while pq:
+        cost, current = heappop(pq)
+        print(current)
+        if current == end:
+            return cost, path(end, previous)
+        for r, c in neighbors(*current, *end):
+            if (r, c) not in previous:
+                previous[(r, c)] = current
+                heappush(pq, (cost + graph[r][c], (r, c)))
+        clock.tick(FPS)
+
+
+def path(node, previous):
+    return [node] if node == START else path(previous[node], previous) + [node]
+
+
+def neighbors(r, c, maxrow, maxcol):
+    for row, col in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
+        if 0 <= row <= maxrow and 0 <= col <= maxcol:
+            yield (row, col)
+
+
 def main():
+    print(dijkstra(GRID, START, END))
     while True:
         events()
         update()
