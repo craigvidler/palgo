@@ -17,7 +17,7 @@ PANELCOLOR = 'gray35'
 TEXTCOLOR = 'gray85'
 FPS = 5
 START = (0, 0)
-END = (-1, -1)
+END = (26, 33)
 
 pygame.init()
 pygame.display.set_caption('Palgo')
