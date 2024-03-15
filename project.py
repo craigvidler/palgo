@@ -1,5 +1,6 @@
 from heapq import heappop, heappush
 from config import *
+from pathfinding import Node
 
 
 def events():
@@ -17,40 +18,35 @@ def draw():
 
 def parse(file):
     with open(file) as f:
-        return [[int(n) for n in line] for line in f.read().splitlines()]
+        return [
+            [Node(row, col, int(n)) for col, n in enumerate(line)]
+            for row, line in enumerate(f.read().splitlines())
+        ]
 
 
 def draw_grid():
     panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
     panel.fill(PANELCOLOR)
-    for r, row in enumerate(GRID):
-        for c, cost in enumerate(row):
-            draw_node(panel, r, c, cost)
+    for row in GRID:
+        for node in row:
+            node.draw(panel)
     screen.blit(panel, (GRIDMARGIN, GRIDMARGIN))
 
 
-def draw_node(surface, r, c, cost):
-    x = c * NODESIZE + c * NODEMARGIN
-    y = r * NODESIZE + r * NODEMARGIN
-    rect = (x, y, NODESIZE, NODESIZE)
-    text = font.render(str(cost), True, TEXTCOLOR)
-    pygame.draw.rect(surface, NODECOLORS[0], rect)
-    surface.blit(text, (x + XPADDING, y + YPADDING))
-
-
-def dijkstra(graph, start, end):
-    pq = [(0, start)]
+def dijkstra(grid, start, end):
+    pq = [(Node(0, *start))]
     previous = {}
 
     while pq:
-        cost, current = heappop(pq)
+        current = heappop(pq)
         yield current
-        if current == end:
-            yield cost, path(end, previous)
-        for r, c in neighbors(*current, *end):
-            if (r, c) not in previous:
-                previous[(r, c)] = current
-                heappush(pq, (cost + graph[r][c], (r, c)))
+        if current.location == end:
+            yield current, path(end, previous)
+            break
+        for neighbor in neighbors(current, *end):
+            if neighbor.location not in previous:
+                previous[neighbor.location] = current.location
+                heappush(pq, neighbor)
         clock.tick(FPS)
 
 
@@ -58,10 +54,11 @@ def path(node, previous):
     return [node] if node == START else path(previous[node], previous) + [node]
 
 
-def neighbors(r, c, maxrow, maxcol):
+def neighbors(current, maxrow, maxcol):
+    r, c = current.row, current.col
     for row, col in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
         if 0 <= row <= maxrow and 0 <= col <= maxcol:
-            yield (row, col)
+            yield Node(row, col, current.cost + GRID[row][col].cost)
 
 
 def main():
