@@ -30,3 +30,41 @@ class Node:
 
     def __lt__(self, other):
         return self.cost < other.cost
+
+
+class Search():
+    def __init__(self, file, start, end, algo):
+        self.graph = self.parse(file)
+        self.start = start
+        self.end = end
+        self.algo = algo(self, start, end)
+
+    def parse(self, file):
+        with open(file) as f:
+            return [
+                [Node(row, col, int(n)) for col, n in enumerate(line)]
+                for row, line in enumerate(f.read().splitlines())
+            ]
+
+    def neighbors(self, current, maxrow, maxcol):
+        r, c = current.row, current.col
+        for row, col in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
+            if 0 <= row <= maxrow and 0 <= col <= maxcol:
+                yield Node(row, col, current.cost + self.graph[row][col].cost)
+
+    def step(self):
+        try:
+            print(next(self.algo))
+        except StopIteration:
+            pass
+
+    def path(self, node, previous):
+        return [node] if node == START else self.path(previous[node], previous) + [node]
+
+    def draw(self):
+        panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
+        panel.fill(PANELCOLOR)
+        for row in self.graph:
+            for node in row:
+                node.draw(panel)
+        screen.blit(panel, (GRIDMARGIN, GRIDMARGIN))
