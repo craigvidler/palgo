@@ -4,6 +4,13 @@ from config import *
 
 class NodeState(IntEnum):
     UNEXPLORED = 0
+    CURRENT = 1
+    NEIGHBOR = 2
+    QUEUED = 3
+    VISITED = 4
+    PATH = 5
+    START = 6
+    END = 7
 
 
 class Node:

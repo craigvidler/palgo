@@ -1,6 +1,6 @@
 from heapq import heappop, heappush
 from config import *
-from pathfinding import Node, Search
+from pathfinding import Node, NodeState, Search
 
 
 def events():
@@ -27,6 +27,8 @@ def dijkstra(search, start, end):
     while pq:
         current = heappop(pq)
         yield current
+        current.state = NodeState.CURRENT
+        search.graph[current.row][current.col].state = NodeState.CURRENT
         if current.location == end:
             yield current, search.path(end, previous)
             break

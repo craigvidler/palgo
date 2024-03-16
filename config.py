@@ -15,7 +15,7 @@ NODECOLORS = ['gray25', 'aqua', 'orange', 'lime', 'pink', 'yellow', 'blue', 'cha
 BKGCOLOR = 'gray35'
 PANELCOLOR = 'gray35'
 TEXTCOLOR = 'gray85'
-FPS = 30
+FPS = 10
 START = (0, 0)
 END = (3, 3)
 
