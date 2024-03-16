@@ -28,7 +28,7 @@ def dijkstra(search, start, end):
         current = heappop(pq)
         yield current
         current.state = NodeState.CURRENT
-        search.graph[current.row][current.col].state = NodeState.CURRENT
+        search.graph[current.location].state = NodeState.CURRENT
         if current.location == end:
             yield current, search.path(end, previous)
             break

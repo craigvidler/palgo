@@ -48,16 +48,17 @@ class Search():
 
     def parse(self, file):
         with open(file) as f:
-            return [
-                [Node(row, col, int(n)) for col, n in enumerate(line)]
+            return {
+                (row, col): Node(row, col, int(n))
                 for row, line in enumerate(f.read().splitlines())
-            ]
+                for col, n in enumerate(line)
+            }
 
     def neighbors(self, current, maxrow, maxcol):
         r, c = current.row, current.col
         for row, col in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
             if 0 <= row <= maxrow and 0 <= col <= maxcol:
-                yield Node(row, col, current.cost + self.graph[row][col].cost)
+                yield Node(row, col, current.cost + self.graph[(row, col)].cost)
 
     def step(self):
         try:
@@ -71,7 +72,6 @@ class Search():
     def draw(self):
         panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
         panel.fill(PANELCOLOR)
-        for row in self.graph:
-            for node in row:
-                node.draw(panel)
+        for node in self.graph.values():
+            node.draw(panel)
         screen.blit(panel, (GRIDMARGIN, GRIDMARGIN))
