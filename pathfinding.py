@@ -54,11 +54,10 @@ class Search():
                 for col, n in enumerate(line)
             }
 
-    def neighbors(self, current, maxrow, maxcol):
-        r, c = current.row, current.col
-        for row, col in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
-            if 0 <= row <= maxrow and 0 <= col <= maxcol:
-                yield Node(row, col, current.cost + self.graph[(row, col)].cost)
+    def neighbors(self, r, c):
+        for neighbor in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
+            if neighbor in self.graph:
+                yield self.graph[neighbor]
 
     def step(self):
         try:

@@ -32,8 +32,9 @@ def dijkstra(search, start, end):
         if current.location == end:
             yield current, search.path(end, previous)
             break
-        for neighbor in search.neighbors(current, *end):
+        for neighbor in search.neighbors(*current.location):
             if neighbor.location not in previous:
+                neighbor.cost += current.cost
                 previous[neighbor.location] = current.location
                 heappush(pq, neighbor)
         clock.tick(FPS)
