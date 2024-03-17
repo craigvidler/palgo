@@ -21,22 +21,25 @@ def draw(search):
 
 
 def dijkstra(search, start, end):
-    pq = [(Node(0, *start))]
+    pq = [search.graph[start]]
     previous = {}
 
     while pq:
         current = heappop(pq)
         yield current
         current.state = NodeState.CURRENT
-        search.graph[current.location].state = NodeState.CURRENT
         if current.location == end:
-            yield current, search.path(end, previous)
+            yield search.path(previous)
             break
         for neighbor in search.neighbors(*current.location):
             if neighbor.location not in previous:
+                neighbor.state = NodeState.NEIGHBOR
+                yield neighbor
                 neighbor.cost += current.cost
-                previous[neighbor.location] = current.location
+                previous[neighbor.location] = current
+                neighbor.state = NodeState.QUEUED
                 heappush(pq, neighbor)
+        current.state = NodeState.VISITED
         clock.tick(FPS)
 
 

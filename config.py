@@ -11,13 +11,13 @@ TEXTSIZE = 14
 YPADDING = 2
 XPADDING = 6
 FILE = 'data/grid.txt'
-NODECOLORS = ['gray25', 'aqua', 'orange', 'lime', 'pink', 'yellow', 'blue', 'chartreuse']
+NODECOLORS = ['gray25', 'black', 'yellow', 'orange', 'blue', 'black', 'black', 'black']
 BKGCOLOR = 'gray35'
 PANELCOLOR = 'gray35'
 TEXTCOLOR = 'gray85'
-FPS = 10
+FPS = 120
 START = (0, 0)
-END = (3, 3)
+END = (26, 33)
 
 pygame.init()
 pygame.display.set_caption('Palgo')

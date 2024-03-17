@@ -20,9 +20,9 @@ class Node:
         self.x = col * NODESIZE + col * NODEMARGIN
         self.y = row * NODESIZE + row * NODEMARGIN
         self.cost = cost
-        self.label = font.render(str(cost), True, TEXTCOLOR)
         self.rect = (self.x, self.y, NODESIZE, NODESIZE)
         self.state = NodeState.UNEXPLORED
+        self.label = font.render(str(cost), True, TEXTCOLOR)
 
     @property
     def location(self):
@@ -65,8 +65,12 @@ class Search():
         except StopIteration:
             pass
 
-    def path(self, node, previous):
-        return [node] if node == START else self.path(previous[node], previous) + [node]
+    def path(self, previous):
+        node = previous[END]
+        while node.location != START:
+            node.state = NodeState.PATH
+            node = previous[node.location]
+        node.state = NodeState.START
 
     def draw(self):
         panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
