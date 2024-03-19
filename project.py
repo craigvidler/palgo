@@ -1,6 +1,43 @@
 from heapq import heappop, heappush
 from config import *
-from pathfinding import Node, NodeState, Search
+from pathfinding import Node, NodeState
+
+
+def main(graph, start, end, algo):
+    search = algo(graph, start, end)
+
+    while True:
+        events()
+
+        try:
+            state = next(search)
+        except StopIteration:
+            pass
+
+        draw(state)
+        clock.tick(FPS)
+
+
+def parse(file):
+    with open(file) as f:
+        return {
+            (row, col): Node(row, col, int(n))
+            for row, line in enumerate(f.read().splitlines())
+            for col, n in enumerate(line)
+        }
+
+
+def neighbors(graph, r, c):
+    for neighbor in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
+        if neighbor in graph:
+            yield graph[neighbor]
+
+
+def get_path(node, previous):
+    if node.location == START:
+        return set([node.location])
+    else:
+        return get_path(previous[node.location], previous) | set([node.location])
 
 
 def events():
@@ -10,47 +47,50 @@ def events():
             raise SystemExit
 
 
-def update(search):
-    search.step()
-
-
-def draw(search):
+def draw(state):
     screen.fill(BKGCOLOR)
-    search.draw()
+
+    panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
+    panel.fill(PANELCOLOR)
+    for node in graph.values():
+
+        if node.location == START:
+            node.draw(panel, NodeState.START)
+        elif node.location == END:
+            node.draw(panel, NodeState.END)
+        elif node == state['current']:
+            node.draw(panel, NodeState.CURRENT)
+        elif node.location in state['path']:
+            node.draw(panel, NodeState.PATH)
+        elif node in state['pq']:
+            node.draw(panel, NodeState.QUEUED)
+        elif node.location in state['previous']:
+            node.draw(panel, NodeState.VISITED)
+        else:
+            node.draw(panel, NodeState.UNEXPLORED)
+    screen.blit(panel, (GRIDMARGIN, GRIDMARGIN))
+
     pygame.display.flip()
 
 
-def dijkstra(search, start, end):
-    pq = [search.graph[start]]
+def dijkstra(graph, start, end):
+    pq = [graph[start]]
     previous = {}
 
     while pq:
         current = heappop(pq)
-        yield current
-        current.state = NodeState.CURRENT
+        path = get_path(current, previous)
+        yield locals()
         if current.location == end:
-            yield search.path(previous)
             break
-        for neighbor in search.neighbors(*current.location):
+        for neighbor in neighbors(graph, *current.location):
             if neighbor.location not in previous:
-                neighbor.state = NodeState.NEIGHBOR
-                yield neighbor
                 neighbor.cost += current.cost
                 previous[neighbor.location] = current
-                neighbor.state = NodeState.QUEUED
                 heappush(pq, neighbor)
-        current.state = NodeState.VISITED
-        clock.tick(FPS)
-
-
-def main(search):
-    while True:
-        events()
-        update(search)
-        draw(search)
         clock.tick(FPS)
 
 
 if __name__ == '__main__':
-    search = Search(FILE, START, END, dijkstra)
-    main(search)
+    graph = parse(FILE)
+    main(graph, START, END, dijkstra)
