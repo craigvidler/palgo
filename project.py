@@ -89,7 +89,6 @@ def dijkstra(graph, start, end):
                 neighbor.cost += current.cost
                 previous[neighbor] = current
                 heappush(pq, neighbor)
-        clock.tick(FPS)
 
 
 if __name__ == '__main__':
