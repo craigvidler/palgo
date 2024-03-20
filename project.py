@@ -3,8 +3,10 @@ from config import *
 from pathfinding import Node, NodeState
 
 
-def main(graph, start, end, algo):
-    search = algo(graph, start, end)
+def main():
+    graph = parse(FILE)
+    algo = dijkstra
+    search = algo(graph, graph[START], graph[END])
 
     while True:
         events()
@@ -14,7 +16,7 @@ def main(graph, start, end, algo):
         except StopIteration:
             pass
 
-        update(graph, state)
+        update(state)
         draw(graph)
         clock.tick(FPS)
 
@@ -61,7 +63,7 @@ def draw(graph):
     pygame.display.flip()
 
 
-def update(graph, state):
+def update(state):
     for node in state['previous']:
         node.state = NodeState.VISITED
     for node in state['path']:
@@ -92,6 +94,4 @@ def dijkstra(graph, start, end):
 
 
 if __name__ == '__main__':
-    graph = parse(FILE)
-    start, end = graph[START], graph[END]
-    main(graph, start, end, dijkstra)
+    main()
