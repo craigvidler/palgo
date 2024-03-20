@@ -27,17 +27,18 @@ def parse(file):
         }
 
 
-def neighbors(graph, r, c):
+def neighbors(graph, node):
+    r, c = node.location
     for neighbor in (r - 1, c), (r + 1, c), (r, c - 1), (r, c + 1):
         if neighbor in graph:
             yield graph[neighbor]
 
 
-def get_path(node, previous):
-    if node.location == START:
-        return set([node.location])
+def get_path(node, start, previous):
+    if node == start:
+        return set([node])
     else:
-        return get_path(previous[node.location], previous) | set([node.location])
+        return get_path(previous[node], start, previous) | set([node])
 
 
 def events():
@@ -52,19 +53,19 @@ def draw(state):
 
     panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
     panel.fill(PANELCOLOR)
-    for node in graph.values():
+    for node in state['graph'].values():
 
-        if node.location == START:
+        if node == state['start']:
             node.draw(panel, NodeState.START)
-        elif node.location == END:
+        elif node == state['end']:
             node.draw(panel, NodeState.END)
         elif node == state['current']:
             node.draw(panel, NodeState.CURRENT)
-        elif node.location in state['path']:
+        elif node in state['path']:
             node.draw(panel, NodeState.PATH)
         elif node in state['pq']:
             node.draw(panel, NodeState.QUEUED)
-        elif node.location in state['previous']:
+        elif node in state['previous']:
             node.draw(panel, NodeState.VISITED)
         else:
             node.draw(panel, NodeState.UNEXPLORED)
@@ -74,23 +75,24 @@ def draw(state):
 
 
 def dijkstra(graph, start, end):
-    pq = [graph[start]]
+    pq = [start]
     previous = {}
 
     while pq:
         current = heappop(pq)
-        path = get_path(current, previous)
+        path = get_path(current, start, previous)
         yield locals()
-        if current.location == end:
+        if current == end:
             break
-        for neighbor in neighbors(graph, *current.location):
-            if neighbor.location not in previous:
+        for neighbor in neighbors(graph, current):
+            if neighbor not in previous:
                 neighbor.cost += current.cost
-                previous[neighbor.location] = current
+                previous[neighbor] = current
                 heappush(pq, neighbor)
         clock.tick(FPS)
 
 
 if __name__ == '__main__':
     graph = parse(FILE)
-    main(graph, START, END, dijkstra)
+    start, end = graph[START], graph[END]
+    main(graph, start, end, dijkstra)
