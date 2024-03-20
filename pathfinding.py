@@ -21,10 +21,11 @@ class Node:
         self.cost = cost
         self.orig_cost = str(cost)
         self.rect = (self.x, self.y, NODESIZE, NODESIZE)
+        self.state = NodeState.UNEXPLORED
 
-    def draw(self, surface, state):
-        pygame.draw.rect(surface, NODECOLORS[state][0], self.rect)
-        self.label = font.render(self.orig_cost, True, NODECOLORS[state][1])
+    def draw(self, surface):
+        pygame.draw.rect(surface, NODECOLORS[self.state][0], self.rect)
+        self.label = font.render(self.orig_cost, True, NODECOLORS[self.state][1])
         surface.blit(self.label, (self.x + XPADDING, self.y + YPADDING))
 
     def __repr__(self):

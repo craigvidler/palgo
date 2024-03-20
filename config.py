@@ -23,9 +23,9 @@ NODECOLORS = [
 BKGCOLOR = 'gray35'
 PANELCOLOR = 'gray35'
 TEXTCOLOR = '#E9D8A6'
-FPS = 20
-START = (0, 0)
 FILE = 'data/grid.txt'
+FPS = 10
+START = (0, 0)
 END = (3, 3)
 END = (26, 33)
 

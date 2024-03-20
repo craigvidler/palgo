@@ -14,7 +14,8 @@ def main(graph, start, end, algo):
         except StopIteration:
             pass
 
-        draw(state)
+        update(graph, state)
+        draw(graph)
         clock.tick(FPS)
 
 
@@ -48,30 +49,29 @@ def events():
             raise SystemExit
 
 
-def draw(state):
+def draw(graph):
     screen.fill(BKGCOLOR)
-
     panel = pygame.Surface((GRIDWIDTH, GRIDHEIGHT))
     panel.fill(PANELCOLOR)
-    for node in state['graph'].values():
 
-        if node == state['start']:
-            node.draw(panel, NodeState.START)
-        elif node == state['end']:
-            node.draw(panel, NodeState.END)
-        elif node == state['current']:
-            node.draw(panel, NodeState.CURRENT)
-        elif node in state['path']:
-            node.draw(panel, NodeState.PATH)
-        elif node in state['pq']:
-            node.draw(panel, NodeState.QUEUED)
-        elif node in state['previous']:
-            node.draw(panel, NodeState.VISITED)
-        else:
-            node.draw(panel, NodeState.UNEXPLORED)
+    for node in graph.values():
+        node.draw(panel)
+
     screen.blit(panel, (GRIDMARGIN, GRIDMARGIN))
-
     pygame.display.flip()
+
+
+def update(graph, state):
+    for node in state['previous']:
+        node.state = NodeState.VISITED
+    for node in state['path']:
+        node.state = NodeState.PATH
+    for node in state['pq']:
+        node.state = NodeState.QUEUED
+
+    state['start'].state = NodeState.START
+    state['end'].state = NodeState.END
+    state['current'].state = NodeState.CURRENT
 
 
 def dijkstra(graph, start, end):
