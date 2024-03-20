@@ -24,8 +24,8 @@ class Node:
         self.state = NodeState.UNEXPLORED
 
     def draw(self, surface):
-        pygame.draw.rect(surface, NODECOLORS[self.state][0], self.rect)
-        self.label = font.render(self.orig_cost, True, NODECOLORS[self.state][1])
+        pygame.draw.rect(surface, NODECOLORS[self.state], self.rect)
+        self.label = font.render(self.orig_cost, True, TEXTCOLORS[self.state])
         surface.blit(self.label, (self.x + XPADDING, self.y + YPADDING))
 
     def __repr__(self):

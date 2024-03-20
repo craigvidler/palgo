@@ -11,14 +11,24 @@ TEXTSIZE = 14
 YPADDING = 2
 XPADDING = 6
 NODECOLORS = [
-    ('gray25', '#E9D8A6'),  # UNEXPLORED = 0
-    ('#9B2226', '#E9D8A6'),  # CURRENT = 1
-    ('#E9C46A', '#E9D8A6'),  # NEIGHBOR = 2
-    ('#005F73', '#E9D8A6'),  # QUEUED = 3
-    ('#0A9396', '#FFFFFF'),  # VISITED = 4
-    ('#CA6702', '#FFFFFF'),  # PATH = 5
-    ('#CA6702', '#FFFFFF'),  # START = 6
-    ('#CA6702', '#FFFFFF'),  # END = 7
+    '#404040',  # UNEXPLORED
+    '#9B2226',  # CURRENT
+    '#E9C46A',  # NEIGHBOR
+    '#005F73',  # QUEUED
+    '#0A9396',  # VISITED
+    '#CA6702',  # PATH
+    '#CA6702',  # START
+    '#CA6702',  # END
+]
+TEXTCOLORS = [
+    '#E9D8A6',  # UNEXPLORED
+    '#E9D8A6',  # CURRENT
+    '#E9D8A6',  # NEIGHBOR
+    '#E9D8A6',  # QUEUED
+    '#FFFFFF',  # VISITED
+    '#FFFFFF',  # PATH
+    '#FFFFFF',  # START
+    '#FFFFFF',  # END
 ]
 BKGCOLOR = 'gray35'
 PANELCOLOR = 'gray35'
