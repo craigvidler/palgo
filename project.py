@@ -39,9 +39,9 @@ def neighbors(graph, node):
 
 def get_path(node, start, previous):
     if node == start:
-        return set([node])
+        return [node]
     else:
-        return get_path(previous[node], start, previous) | set([node])
+        return get_path(previous[node], start, previous) + [node]
 
 
 def events():
