@@ -1,9 +1,9 @@
 import pygame
 
-SCREENWIDTH, SCREENHEIGHT = 1200, 596
+SCREENWIDTH, SCREENHEIGHT = 1200, 659
 SCREENRECT = pygame.Rect(0, 0, SCREENWIDTH, SCREENHEIGHT)
 GRIDWIDTH = 714
-GRIDHEIGHT = 567
+GRIDHEIGHT = 630
 GRIDMARGIN = 15
 NODEMARGIN = 1
 NODESIZE = 20
@@ -34,10 +34,9 @@ BKGCOLOR = 'gray35'
 PANELCOLOR = 'gray35'
 TEXTCOLOR = '#E9D8A6'
 FILE = 'data/grid.txt'
-FPS = 10
+FPS = 60
 START = (0, 0)
-END = (3, 3)
-END = (26, 33)
+END = (29, 29)
 
 pygame.init()
 pygame.display.set_caption('Palgo')
