@@ -1,6 +1,5 @@
-from heapq import heappop, heappush
 from config import *
-from pathfinding import GraphSearch
+from pathfinding import GraphSearch, dijkstra
 
 
 def main():
@@ -27,23 +26,6 @@ def draw(gs):
     gs.draw(panel)
     screen.blit(panel, (GRIDMARGIN, GRIDMARGIN))
     pygame.display.flip()
-
-
-def dijkstra(gs, start, end):
-    pq = [start]
-    previous = {}
-
-    while pq:
-        current = heappop(pq)
-        path = gs.path(current, start, previous)
-        yield locals()
-        if current == end:
-            break
-        for neighbor in current.neighbors():
-            if neighbor not in previous:
-                neighbor.cost += current.cost
-                previous[neighbor] = current
-                heappush(pq, neighbor)
 
 
 if __name__ == '__main__':

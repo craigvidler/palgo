@@ -1,4 +1,5 @@
 from enum import IntEnum
+from heapq import heappop, heappush
 from config import *
 
 
@@ -83,3 +84,21 @@ class GraphSearch(dict):
     def draw(self, panel):
         for node in self.values():
             node.draw(panel)
+
+
+def dijkstra(gs, start, end):
+    pq = [start]
+    previous = {}
+
+    while pq:
+        current = heappop(pq)
+        path = gs.path(current, start, previous)
+        yield locals()
+        if current == end:
+            break
+
+        for neighbor in current.neighbors():
+            if neighbor not in previous:
+                neighbor.cost += current.cost
+                previous[neighbor] = current
+                heappush(pq, neighbor)
