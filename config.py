@@ -37,6 +37,7 @@ FILE = 'data/grid.txt'
 FPS = 60
 START = (0, 0)
 END = (29, 29)
+ALGO = 'dijkstra'
 
 pygame.init()
 pygame.display.set_caption('Palgo')

@@ -1,9 +1,9 @@
 from config import *
-from pathfinding import GraphSearch, dijkstra
+from pathfinding import GraphSearch, algos
 
 
 def main():
-    gs = GraphSearch(FILE, START, END, dijkstra)
+    gs = GraphSearch(FILE, START, END, algos[ALGO])
 
     while True:
         events()

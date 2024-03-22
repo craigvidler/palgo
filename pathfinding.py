@@ -1,4 +1,5 @@
 from enum import IntEnum
+from math import inf
 from heapq import heappop, heappush
 from config import *
 
@@ -21,6 +22,7 @@ class Node:
         self.y = row * NODESIZE + row * NODEMARGIN
         self.cost = cost
         self.orig_cost = str(cost)
+        self.f_cost = inf
         self.rect = (self.x, self.y, NODESIZE, NODESIZE)
         self.state = NodeState.UNEXPLORED
         self.graph = graph
@@ -40,7 +42,18 @@ class Node:
         return f'Node {self.location}, cost {self.cost}'
 
     def __lt__(self, other):
-        return self.cost < other.cost
+        if ALGO == 'dijkstra':
+            return self.cost < other.cost
+        else:
+            return self.f_cost < other.f_cost
+
+    @property
+    def g_cost(self):
+        return self.cost
+
+    @g_cost.setter
+    def g_cost(self, value):
+        self.cost = value
 
 
 class GraphSearch(dict):
@@ -72,8 +85,8 @@ class GraphSearch(dict):
             node.state = NodeState.QUEUED
 
         self.search_state['start'].state = NodeState.START
-        self.search_state['end'].state = NodeState.END
         self.search_state['current'].state = NodeState.CURRENT
+        self.search_state['end'].state = NodeState.END
 
     def path(self, node, start, previous):
         if node == start:
@@ -102,3 +115,38 @@ def dijkstra(gs, start, end):
                 neighbor.cost += current.cost
                 previous[neighbor] = current
                 heappush(pq, neighbor)
+
+
+def manhattan(a, b):
+    return abs(sum(a.location) - sum(b.location))
+
+
+def chebyshev(a, b):
+    x1, y1 = a.location
+    x2, y2 = b.location
+    return max(x2 - x1, y2 - y1)
+
+
+def a_star(gs, start, end, heuristic=manhattan):
+    start.f_cost = heuristic(start, end)
+    pq = [start]
+    previous = {}
+
+    while pq:
+        current = heappop(pq)
+        path = gs.path(current, start, previous)
+        yield locals()
+        if current == end:
+            break
+
+        for neighbor in current.neighbors():
+            new_g = current.g_cost + neighbor.cost
+            # second condition required if heuristic not consistent (as here)
+            if neighbor not in previous or new_g < neighbor.g_cost:
+                neighbor.g_cost = new_g
+                neighbor.f_cost = new_g + heuristic(neighbor, end)
+                heappush(pq, neighbor)
+                previous[neighbor] = current
+
+
+algos = {'dijkstra': dijkstra, 'a_star': a_star}
